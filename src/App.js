@@ -27,6 +27,20 @@ class App extends React.Component {
     this.setState({ message: "You have been entered!!!"});
   }
 
+  onClick = async (event) => {
+    event.preventDefault();
+    const accounts = await web3.eth.getAccounts();
+
+    this.setState({message:"Waiting on transaction success"});
+
+    await lottery.methods.pickWinner().send({from:accounts[0]})
+    console.log('ex')
+
+    this.setState({ message: "Winner has been picked!!!"});
+
+
+  }
+
    componentDidMount = async () => {
     const manager = await lottery.methods.manager().call();
     const players = await lottery.methods.getPlayers().call()
@@ -57,6 +71,10 @@ class App extends React.Component {
         </form>
       <hr />
       <h1>{this.state.message}</h1>
+      <hr />
+      <h4>Ready to pick a winner</h4>
+      <button onClick={this.onClick}>Pick a Winner</button>
+      <hr />
       
       </div>
     );
